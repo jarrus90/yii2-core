@@ -20,6 +20,7 @@ php composer.phar update
 
 ###Migration
 [Thanks to dmstr](https://github.com/dmstr/yii2-migrate-command)
+
 Console Migration Command with multiple paths/aliases support
 ~~~php
     'controllerMap'       => [
@@ -30,6 +31,7 @@ Console Migration Command with multiple paths/aliases support
 ~~~
 ###Assets cleanup
 [Thanks to assayer-pro](https://github.com/assayer-pro/yii2-asset-clean)
+
 Yii2 console command to clean web/assets/ directory
 ~~~php
 	'controllerMap' => [
