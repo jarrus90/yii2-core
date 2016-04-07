@@ -1,0 +1,17 @@
+{
+    "name": "jarrus90/yii2-core",
+    "description": "Several common basic functionality for personal modules",
+    "type": "yii2-extension",
+    "keywords": ["yii2"],
+    "license": "BSD-3-Clause",
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "jarrus90\\Core\\": ""
+        }
+    }
+}
