@@ -16,9 +16,9 @@ php composer.phar update
 
 ~~~
 
-###Console controllers
+#Console controllers
 
-##Migration
+###Migration
 [Thanks to dmstr](https://github.com/dmstr/yii2-migrate-command)
 Console Migration Command with multiple paths/aliases support
 ~~~php
@@ -28,7 +28,7 @@ Console Migration Command with multiple paths/aliases support
 		],
 	],
 ~~~
-##Assets cleanup
+###Assets cleanup
 [Thanks to assayer-pro](https://github.com/assayer-pro/yii2-asset-clean)
 Yii2 console command to clean web/assets/ directory
 ~~~php
@@ -39,8 +39,8 @@ Yii2 console command to clean web/assets/ directory
 	],
 ~~~
 
-###Components
-##Multilang request
+#Components
+###Multilang request
 Sets current user language as application language
 ~~~php
     'components' => [
