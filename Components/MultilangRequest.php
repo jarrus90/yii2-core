@@ -8,7 +8,7 @@
  * @package jarrus90\Core\Components
  */
 
-namespace jarrus90\Core\components;
+namespace jarrus90\Core\Components;
 
 use Yii;
 use yii\web\Request;
