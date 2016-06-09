@@ -40,16 +40,3 @@ Yii2 console command to clean web/assets/ directory
 		],
 	],
 ~~~
-
-#Components
-###Multilang request
-Sets current user language as application language
-~~~php
-    'components' => [
-        'request' => [
-            'class' => 'jarrus90\Core\components\MultilangRequest',
-            'cookieValidationKey' => 'gdsgsgsB^T#Rb'
-        ],
-	]
-~~~
-Requires user identity having field `lang`

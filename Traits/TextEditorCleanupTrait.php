@@ -14,8 +14,9 @@ trait TextEditorCleanupTrait {
      * @param string $text raw input
      * @return string cleaned input
      */
-    protected function cleanTextarea($text, $safeAttributes = ['style']) {
-        $str = nl2br(strip_tags($text, '<br><br/><p><hr><table><tr><td><ul><ol><li><span><strong><em><del>'));
+    protected function cleanTextarea($text, $safeAttributes = ['style'], $safeTags = '', $overrideTags = false) {
+        $safeTagsDefault = '<br><br/><p><hr><table><tr><td><ul><ol><li><span><strong><em><del><img><img/>';
+        $str = nl2br(strip_tags($text, $safeTags . ($overrideTags ? '' : $safeTagsDefault)));
         $result = '';
         if (strlen($str) > 0) {
             $dom = new \DOMDocument();

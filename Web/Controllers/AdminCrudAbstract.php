@@ -89,7 +89,7 @@ abstract class AdminCrudAbstract extends Controller {
         ]);
         $this->performAjaxValidation($model);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['update', 'id' => $model->model->id]);
         }
 
         return $this->render('item', [
@@ -116,7 +116,7 @@ abstract class AdminCrudAbstract extends Controller {
         $this->performAjaxValidation($model);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->refresh();
         }
 
         return $this->render('item', [
