@@ -66,7 +66,10 @@ abstract class AdminCrudAbstract extends Controller {
      * @return string
      */
     public function actionIndex() {
-        $filterModel = Yii::createObject(['class' => $this->searchClass]);
+        $filterModel = Yii::createObject([
+                    'class' => $this->searchClass
+        ]);
+        $filterModel->scenario = (array_key_exists('search', $filterModel->scenarios()) ? 'search' : 'default');
         return $this->render('index', [
                     'filterModel' => $filterModel,
                     'dataProvider' => $filterModel->search(Yii::$app->request->get()),
