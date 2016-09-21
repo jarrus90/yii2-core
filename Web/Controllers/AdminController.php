@@ -24,7 +24,7 @@ class AdminController extends \yii\web\Controller {
      * Layout type
      * @var string
      */
-    public $layout = '/backend';
+    public $layout = '@jarrus90/Core/Web/layouts/backend';
     /**
      * BeforeAction
      * 
