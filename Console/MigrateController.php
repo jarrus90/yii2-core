@@ -491,7 +491,7 @@ class MigrateController extends BaseMigrateController {
      *
      * @return boolean whether the migration is successful
      */
-    protected function migrateUp($class, $alias) {
+    protected function migrateUp($class, $alias = self::BASE_MIGRATION) {
         if ($class === self::BASE_MIGRATION) {
             return true;
         }
@@ -520,7 +520,7 @@ class MigrateController extends BaseMigrateController {
      *
      * @return boolean whether the migration is successful
      */
-    protected function migrateDown($class, $alias) {
+    protected function migrateDown($class, $alias = self::BASE_MIGRATION) {
         if ($class === self::BASE_MIGRATION) {
             return true;
         }
@@ -547,7 +547,7 @@ class MigrateController extends BaseMigrateController {
      *
      * @return \yii\db\Migration the migration instance
      */
-    protected function createMigration($class, $alias) {
+    protected function createMigration($class, $alias = '') {
         $file = $class . '.php';
         require_once(\Yii::getAlias($alias) . '/' . $file);
         return new $class(['db' => $this->db]);
