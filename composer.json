@@ -16,7 +16,8 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0",
-        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-widget-alert": "*",
+        "kartik-v/yii2-widget-growl": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
         "jarrus90/yii2-user": "*"
     },

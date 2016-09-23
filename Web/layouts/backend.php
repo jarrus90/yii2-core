@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\alert\AlertBlock;
-use kartik\widgets\Growl;
+use kartik\growl\Growl;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
