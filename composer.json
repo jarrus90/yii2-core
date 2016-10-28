@@ -25,5 +25,8 @@
         "psr-4": {
             "jarrus90\\Core\\": ""
         }
+    },
+    "extra": {
+        "bootstrap": "jarrus90\\Core\\Bootstrap"
     }
 }
