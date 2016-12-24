@@ -161,18 +161,19 @@ class AdminMenu extends \yii\bootstrap\Widget {
         $request->setUrl($route);
         $resolve = $request->resolve();
 
-        $controller = Yii::$app->createController($resolve[0])[0];
-        $action = $controller->createAction($actionId);
-        $behaviors = $controller->behaviors();
-        if (ISSET($behaviors['access'])) {
-            $access = Yii::createObject([
-                        'class' => $behaviors['access']['class'],
-                        'rules' => $behaviors['access']['rules']
-            ]);
-            $access->init();
-            foreach ($access->rules AS $rule) {
-                if ($allow = $rule->allows($action, Yii::$app->user, Yii::$app->getRequest())) {
-                    return true;
+        if(($controller = Yii::$app->createController($resolve[0])[0])) {
+            $action = $controller->createAction($actionId);
+            $behaviors = $controller->behaviors();
+            if (ISSET($behaviors['access'])) {
+                $access = Yii::createObject([
+                            'class' => $behaviors['access']['class'],
+                            'rules' => $behaviors['access']['rules']
+                ]);
+                $access->init();
+                foreach ($access->rules AS $rule) {
+                    if ($allow = $rule->allows($action, Yii::$app->user, Yii::$app->getRequest())) {
+                        return true;
+                    }
                 }
             }
         }
