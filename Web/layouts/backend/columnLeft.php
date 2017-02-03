@@ -1,5 +1,6 @@
 <aside class="main-sidebar">
     <section class="sidebar" style="height: auto;">
+        <?= $this->render('columnLeftBefore'); ?>
         <ul class="sidebar-menu">
             <?php if (ISSET(Yii::$app->extensions['jarrus90/yii2-multilang'])) { ?>
                 <li class="header"><?= Yii::t('core', 'Choose language'); ?></li>
@@ -8,5 +9,6 @@
             <li class="header"><?= Yii::t('core', 'Main navigation'); ?></li>
                 <?= \jarrus90\Core\widgets\AdminMenu::widget(); ?>
         </ul>
+        <?= $this->render('columnLeftAfter'); ?>
     </section>
 </aside>

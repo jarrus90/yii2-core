@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Dektrium project.
- *
- * (c) Dektrium project <http://github.com/dektrium>
- *
- * For the full copyright and license information, please view the LICENSE.md
- * file that was distributed with this source code.
- */
-
 namespace jarrus90\Core\Web\Controllers;
 
 use Yii;
@@ -23,12 +14,11 @@ use jarrus90\Core\Web\Controllers\AdminController as Controller;
 abstract class AdminCrudAbstract extends Controller {
 
     use \jarrus90\Core\Traits\AjaxValidationTrait;
+
     /**
-     * @param  string $id
-     * @return \jarrus90\User\models\Role|\jarrus90\User\models\Permission
+     * @param  int $id
      */
     abstract protected function getItem($id);
-
 
     /**
      * @var string
@@ -82,7 +72,6 @@ abstract class AdminCrudAbstract extends Controller {
      * @throws \yii\base\InvalidConfigException
      */
     public function actionCreate() {
-        /** @var \jarrus90\User\models\Role|\jarrus90\User\models\Permission $model */
         $model = Yii::createObject([
                     'class' => $this->formClass,
                     'scenario' => 'create',
@@ -102,13 +91,12 @@ abstract class AdminCrudAbstract extends Controller {
 
     /**
      * Shows update form.
-     * @param  string $name
+     * @param  int $id Item id
      * @return string|Response
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
     public function actionUpdate($id) {
-        /** @var \jarrus90\User\models\Role|\jarrus90\User\models\Permission $model */
         $item = $this->getItem($id);
         $model = Yii::createObject([
                     'class' => $this->formClass,
@@ -129,7 +117,7 @@ abstract class AdminCrudAbstract extends Controller {
 
     /**
      * Deletes item.
-     * @param  string $name
+     * @param  int $id Item id
      * @return Response
      * @throws NotFoundHttpException
      */

@@ -72,10 +72,8 @@ $direction = Yii::$app->getModule('multilang')->getIsRtl() ? ' dir="rtl"' : '';
             ]);
             ?>
             <?= $this->render('backend/header.php', ['directoryAsset' => $directoryAsset]) ?>
-            <div class="wrapper row-offcanvas row-offcanvas-left">
-                <?= $this->render('backend/columnLeft.php') ?>
-                <?= $this->render('backend/content.php', ['content' => $content, 'directoryAsset' => $directoryAsset]) ?>
-            </div>
+            <?= $this->render('backend/columnLeft.php') ?>
+            <?= $this->render('backend/content.php', ['content' => $content, 'directoryAsset' => $directoryAsset]) ?>
             <footer class="main-footer">
                 <?= Yii::$app->name; ?> &copy; <?= date('Y'); ?>
             </footer>
