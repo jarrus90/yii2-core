@@ -34,6 +34,13 @@ class AdminMenu extends \yii\bootstrap\Widget {
         $this->_menuItems = [];
         if (!Yii::$app->user->isGuest) {
             $this->_menuItems = $this->buildMenu();
+        } else if (Yii::$app->user->isGuest  && ISSET(Yii::$app->extensions['jarrus90/yii2-user'])) {
+            $item = Yii::$app->params['admin']['menu']['login'];
+            if ($item instanceof \Closure) {
+                $item = $item();
+            }
+            $item['active'] = true;
+            $this->_menuItems[] = $item;
         }
     }
 
