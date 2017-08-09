@@ -80,7 +80,7 @@ class AssetController extends \yii\console\controllers\AssetController {
     }
 
     public function cleanAssetsDir() {
-        $this->message("Cleaning assets dir...\n", Console::FG_GREEN);
+        $this->message("Cleaning assets dir '{$this->assetsDir}'...\n", Console::FG_GREEN);
         $assetsDirs = glob(Yii::getAlias($this->assetsDir) . '/*', GLOB_ONLYDIR);
         foreach ($assetsDirs as $dir) {
             if (in_array(basename($dir), $this->ignoreDirs)) {
@@ -92,7 +92,7 @@ class AssetController extends \yii\console\controllers\AssetController {
                 FileHelper::removeDirectory($dir);
             }
         }
-        $this->message("Done. Assets dir cleaned\n", Console::FG_GREEN);
+        $this->message("Assets dir '{$this->assetsDir}' cleaned\n", Console::FG_GREEN);
     }
 
 }
