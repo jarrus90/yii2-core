@@ -24,24 +24,17 @@ class AdminMenu extends \yii\bootstrap\Widget {
      */
     protected $_menuItems;
 
+
     /**
-     * Initialization
-     * 
-     * Initialize widget and build menu elements
+     * Render widget
+     * @return string
      */
-    public function init() {
-        parent::init();
-        $this->_menuItems = [];
-        if (!Yii::$app->user->isGuest) {
-            $this->_menuItems = $this->buildMenu();
-        } else if (Yii::$app->user->isGuest  && ISSET(Yii::$app->extensions['jarrus90/yii2-user'])) {
-            $item = Yii::$app->params['admin']['menu']['login'];
-            if ($item instanceof \Closure) {
-                $item = $item();
-            }
-            $item['active'] = true;
-            $this->_menuItems[] = $item;
-        }
+    public function run() {
+        $menu = $this->getMenuList();
+        $sortedList = $this->sorMenuItems($menu);
+        return $this->render('@jarrus90/Core/Widgets/views/adminMenu', [
+            'items' => $sortedList
+        ]);
     }
 
     /**
@@ -51,104 +44,35 @@ class AdminMenu extends \yii\bootstrap\Widget {
      * 
      * @return array Menu items
      */
-    protected function buildMenu() {
-        $menuItems = [];
-        $currentModule = Yii::$app->controller->module->id;
-        $currentRoute = Yii::$app->requestedRoute;
-        $currentUrl = substr(Url::toRoute([Yii::$app->request->url]), 1);
-        $startPos = 999999;
-        foreach (Yii::$app->params['admin']['menu'] AS $key => $list) {
-            if ($list instanceof \Closure) {
-                $list = $list();
-            }
-            if (!empty($list['items'])) {
-                $moduleMenuItems = $this->buildModuleMenu($list['items']);
-                if (count($moduleMenuItems) > 0) {
-                    $active = false;
-                    if ($currentModule == $key) {
-                        $active = true;
-                    } else if(!empty(Yii::$app->params['admin']['active']) && Yii::$app->params['admin']['active'] == $key) {
-                        $active = true;
-                    } else {
-                        foreach ($moduleMenuItems AS $item) {
-                            if(isset($item['active']) && $item['active'] == true) {
-                                $active = true;
-                            }
-                        }
-                        foreach ($moduleMenuItems AS $item) {
-                            $path = (strpos('/', $item['url']) == 0 ) ? substr($item['url'], 1) : $item['url'];
-                            if ($currentUrl == $path) {
-                                $active = true;
-                            }
-                        }
-                    }
-                    $menuItems[] = [
-                        'label' => $list['label'],
-                        'icon' => ISSET($list['icon']) ? $list['icon'] : '',
-                        'active' => $active,
-                        'childs' => $moduleMenuItems,
-                        'position' => !empty($list['position']) ? $list['position'] : $startPos++
-                    ];
-                }
-            } else if (!empty($list['url'])) {
-                if ($this->getIsAllowed($list['url'])) {
-                    $current = Yii::$app->request->pathInfo;
-                    $path = (strpos('/', $list['url']) == 0 ) ? substr($list['url'], 1) : $list['url'];
-                    $active = substr($current, 0, strrpos($current, '/') + 1) == substr($path, 0, strrpos($path, '/') + 1);
-
-                    if(!$active && isset($list['active']) && $list['active'] instanceof \Closure) {
-                        $active = $list['active']();
-                    }
-                    
-                    $menuItems[] = [
-                        'label' => $list['label'],
-                        'url' => Url::toRoute($list['url']),
-                        'icon' => ISSET($list['icon']) ? $list['icon'] : '',
-                        'active' => $active,
-                        'position' => !empty($list['position']) ? $list['position'] : $startPos++
-                    ];
+    protected function getMenuList() {
+        $items = [];
+        foreach(Yii::$app->modules AS $module) {
+            if(method_exists($module, 'getAdminMenu')) {
+                $menu = $module->getAdminMenu();
+                foreach($menu AS $menukey => $menuitem) {
+                    $items[$menukey] = $menuitem;
                 }
             }
         }
-        usort($menuItems, function($a, $b) {
-            return $a['position'] > $b['position'];
-        });
-        return $menuItems;
+        return $items;
     }
 
     /**
-     * Build module menu
-     * 
-     * Passes through the menu items described in module
-     * and checks their availability for the current user
-     * 
-     * @param array $items Module menu items
-     * @return array Available items
+     * Sorts menu from top to bottom
+     *
+     * @param array $items
+     * @return array Sorted menu items
      */
-    protected function buildModuleMenu($items) {
-        $list = [];
-        foreach ($items AS $item) {
-            if (!$this->getIsAllowed($item['url'])) {
-                continue;
+    protected function sorMenuItems($items) {
+        foreach($items AS $key => $item) {
+            if(empty($item['position'])) {
+                $items[$key]['position'] = 10000;
             }
-            $listItem = [
-                'title' => $item['label'],
-                'url' => Url::toRoute($item['url'])
-            ];
-            if(isset($item['active']) && $item['active'] instanceof \Closure) {
-                $listItem['active'] = $item['active']();
-            }
-            $list[] = $listItem;
         }
-        return $list;
-    }
-
-    protected function _getRouteStructure($url) {
-        $itemStructure = explode('/', $url);
-        if ($itemStructure[0] == '') {
-            array_shift($itemStructure);
-        }
-        return $itemStructure;
+        uasort($items, function($a, $b) {
+            return $a['position'] > $b['position'];
+        });
+        return $items;
     }
 
     /**
@@ -178,23 +102,13 @@ class AdminMenu extends \yii\bootstrap\Widget {
                 ]);
                 $access->init();
                 foreach ($access->rules AS $rule) {
-                    if ($allow = $rule->allows($action, Yii::$app->user, Yii::$app->getRequest())) {
+                    if ($rule->allows($action, Yii::$app->user, Yii::$app->getRequest())) {
                         return true;
                     }
                 }
             }
         }
         return false;
-    }
-
-    /**
-     * Render widget
-     * @return string
-     */
-    public function run() {
-        return $this->render('adminMenu', [
-                    'items' => $this->_menuItems
-        ]);
     }
 
 }

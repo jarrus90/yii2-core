@@ -1,31 +1,26 @@
 <?php
-foreach ($items AS $mainItem) {
-    $isActive = $mainItem['active'];
-    $isList = ISSET($mainItem['childs']);
-    ?>
-    <li class="<?= $isList ? 'treeview' : ''; ?><?= $isActive ? ' active' : '' ?>">
-        <a href="<?= $isList ? '#' : (ISSET($mainItem['url']) ? $mainItem['url'] : '#' ); ?>">
-            <?= $mainItem['icon']; ?><span><?= $mainItem['label'] ?></span>
-            <?php if ($isList) { ?>
-                <i class="fa fa-angle-left pull-right"></i>
-        <?php } ?>
-        </a>
-            <?php if ($isList) { ?>
-            <ul class="treeview-menu<?= $isActive ? ' menu-open' : '' ?>">
-                <?php
-                foreach ($mainItem['childs'] AS $child) {
-                    $activeClass = '';
-                    if (!empty($child['active']) && $child['active']) {
-                        $activeClass = 'active ';
-                    }
-                    ?>
-                    <li class="<?= $activeClass; ?>">
-                        <a href="<?= $child['url'] ?>">
-                            <span class="fa fa-list"></span> <?= $child['title'] ?>
-                        </a>
-                    </li>
-            <?php } ?>
-            </ul>
-    <?php } ?>
-    </li>
-<?php } ?>
+foreach($items AS $key => $item) {
+    if(!empty($item['items'])) {
+        $items[$key]['options'] = [
+            'class' => 'treeview'
+        ];
+        $items[$key]['dropDownOptions'] = [
+            'class' => 'treeview-menu',
+            'id' => "{$key}__dropdown"
+        ];
+    }
+}
+echo \yii\widgets\Menu::widget([
+    'activateParents' => true,
+    'labelTemplate' => '<a href="#">{label}<span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span></a>',
+    'submenuTemplate' => "\n<ul class='treeview-menu'>\n{items}\n</ul>\n",
+    'options' => [
+        'class' => 'sidebar-menu tree',
+        'data' => [
+            'widget' => 'tree'
+        ]
+    ],
+    'items' => $items
+]);

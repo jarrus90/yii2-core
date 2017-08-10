@@ -7,8 +7,8 @@
                 <?= \jarrus90\Multilang\Widgets\SelectWidget::widget(['layout' => '@jarrus90/Multilang/views/widgets/select/backend']); ?>
             <?php } ?>
             <li class="header"><?= Yii::t('core', 'Main navigation'); ?></li>
-                <?= \jarrus90\Core\widgets\AdminMenu::widget(); ?>
         </ul>
+        <?= \jarrus90\Core\widgets\AdminMenu::widget(); ?>
         <?= $this->render('columnLeftAfter'); ?>
     </section>
 </aside>
