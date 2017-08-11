@@ -10,33 +10,54 @@ namespace jarrus90\Core\widgets;
 
 use Yii;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 /**
  * Admin menu
  * 
  * Builds menu of adminpanel checking if user can access menu item
  */
-class AdminMenu extends \yii\bootstrap\Widget {
+class AdminMenu extends \yii\widgets\Menu {
 
-    /**
-     * List of menu items
-     * @var srray
-     */
-    protected $_menuItems;
+    public $activateParents = true;
 
+    public $linkTemplate = '<a href="{url}">{icon}<span>{label}</span>{dropdownCaret}</a>';
 
+    public $dropDownCaretTemplate = '<span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+    </span>';
+	
+    public $submenuTemplate = "\n<ul class='treeview-menu'>\n{items}\n</ul>\n";
+	
+    public $options = [
+        'class' => 'sidebar-menu tree',
+        'data' => [
+            'widget' => 'tree'
+        ]
+    ];
+
+ 
     /**
      * Render widget
      * @return string
      */
     public function run() {
-        $menu = $this->getMenuList();
-        $sortedList = $this->sorMenuItems($menu);
-        return $this->render('@jarrus90/Core/Widgets/views/adminMenu', [
-            'items' => $sortedList
-        ]);
+        $this->items = $this->getMenuList();
+        $this->sortMenuItems();
+        parent::run();
     }
 
+    protected function renderItem($item) {
+        if(!isset($item['url'])) {
+            $item['url'] = '#';
+        }
+        $link = parent::renderItem($item);
+        return strtr($link, [
+            '{icon}' => ArrayHelper::getValue($item, 'icon', ''),
+            '{dropdownCaret}' => !empty($item['items']) ? $this->dropDownCaretTemplate : ''
+        ]);
+    }
+    
     /**
      * Build menu
      * 
@@ -56,23 +77,22 @@ class AdminMenu extends \yii\bootstrap\Widget {
         }
         return $items;
     }
-
+    
     /**
      * Sorts menu from top to bottom
      *
      * @param array $items
      * @return array Sorted menu items
      */
-    protected function sorMenuItems($items) {
-        foreach($items AS $key => $item) {
+    protected function sortMenuItems() {
+        foreach($this->items AS $key => $item) {
             if(empty($item['position'])) {
-                $items[$key]['position'] = 10000;
+                $this->items[$key]['position'] = 10000;
             }
         }
-        uasort($items, function($a, $b) {
+        uasort($this->items, function($a, $b) {
             return $a['position'] > $b['position'];
         });
-        return $items;
     }
 
     /**
