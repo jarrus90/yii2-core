@@ -2,7 +2,7 @@
 
 /**
  * Class AdminMenu
- * 
+ *
  * @package app\modules\core\widgets
  */
 
@@ -11,24 +11,16 @@ namespace jarrus90\Core\widgets;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use dmstr\widgets\Menu;
 
 /**
  * Admin menu
- * 
+ *
  * Builds menu of adminpanel checking if user can access menu item
  */
-class AdminMenu extends \yii\widgets\Menu {
+class AdminMenu extends Menu {
 
-    public $activateParents = true;
 
-    public $linkTemplate = '<a href="{url}">{icon}<span>{label}</span>{dropdownCaret}</a>';
-
-    public $dropDownCaretTemplate = '<span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-    </span>';
-	
-    public $submenuTemplate = "\n<ul class='treeview-menu'>\n{items}\n</ul>\n";
-	
     public $options = [
         'class' => 'sidebar-menu tree',
         'data' => [
@@ -36,33 +28,22 @@ class AdminMenu extends \yii\widgets\Menu {
         ]
     ];
 
- 
     /**
      * Render widget
      * @return string
      */
     public function run() {
+        Menu::$iconClassPrefix = '';
         $this->items = $this->getMenuList();
         $this->sortMenuItems();
         parent::run();
     }
 
-    protected function renderItem($item) {
-        if(!isset($item['url'])) {
-            $item['url'] = '#';
-        }
-        $link = parent::renderItem($item);
-        return strtr($link, [
-            '{icon}' => ArrayHelper::getValue($item, 'icon', ''),
-            '{dropdownCaret}' => !empty($item['items']) ? $this->dropDownCaretTemplate : ''
-        ]);
-    }
-    
     /**
      * Build menu
-     * 
+     *
      * Passes through modules and builds menu
-     * 
+     *
      * @return array Menu items
      */
     protected function getMenuList() {
@@ -77,7 +58,7 @@ class AdminMenu extends \yii\widgets\Menu {
         }
         return $items;
     }
-    
+
     /**
      * Sorts menu from top to bottom
      *
@@ -97,9 +78,9 @@ class AdminMenu extends \yii\widgets\Menu {
 
     /**
      * Is allowed
-     * 
+     *
      * Check if user can access specified menu item
-     * 
+     *
      * @param string $route Route
      * @param string $actionId action
      * @return boolean Is user allowed to access
