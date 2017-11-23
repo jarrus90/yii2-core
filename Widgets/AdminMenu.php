@@ -12,6 +12,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use dmstr\widgets\Menu;
+use jarrus90\Multilang\Models\Language;
 
 /**
  * Admin menu
@@ -48,7 +49,39 @@ class AdminMenu extends Menu {
      */
     protected function getMenuList() {
         $items = [];
+        if (ISSET(Yii::$app->extensions['jarrus90/yii2-multilang'])) {
+            $items['langhead'] = [
+                'label' => Yii::t('core', 'Choose language'),
+                'options' => ['class' => 'header'],
+                'position' => -4
+            ];
+            $langItem = [
+                'position' => -3,
+                'icon' => 'fa fa-language'
+            ];
+            $languages = Language::getDb()->cache(function () {
+                return Language::find()->where([
+                    'is_active' => true
+                ])->asArray()->all();
+            });
+            foreach($languages AS $lang) {
+                if($lang['code'] == Yii::$app->language) {
+                    $langItem['label'] = $lang['name'];
+                } else {
+                    $langItem['items'][] = [
+                        'label' => $lang['name'],
+                        'url' => Url::toRoute(['/multilang/change/set', 'lang' => $lang['code']])
+                    ];
+                }
+            }
+            $items['lang'] = $langItem;
+        }
         foreach(Yii::$app->modules AS $module) {
+            $items['listhead'] = [
+                'label' => Yii::t('core', 'Main navigation'),
+                'options' => ['class' => 'header'],
+                'position' => -1
+            ];
             if(method_exists($module, 'getAdminMenu')) {
                 $menu = $module->getAdminMenu();
                 foreach($menu AS $menukey => $menuitem) {
